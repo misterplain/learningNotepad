@@ -1,0 +1,29 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+.container{
+    margin: 100px auto;
+    width: 1000px;
+    background-color: #7f8c8d;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around; /* flex-start, center, flex-end, space-around, space-between, space-evenly */
+}
+.box{
+    background-color: #2980b9;
+    color: #fff;
+    padding: 30px;
+    width: 300px;
+}
+.box h4{
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+.box p{
+    line-height: 22px;
+}
