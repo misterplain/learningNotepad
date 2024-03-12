@@ -16,3 +16,10 @@ const array = [1, 2, 9, 1, 0];
 const max = findMax(array, 0, array.length - 1);
 console.log(max);
 console.log(array[4]);
+
+function fact(num) {
+  if (num <= 1) {
+    return 1;
+  }
+  return num * fact(num - 1);
+}
