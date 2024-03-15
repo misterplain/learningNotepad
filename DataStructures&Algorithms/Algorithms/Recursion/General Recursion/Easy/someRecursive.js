@@ -6,14 +6,14 @@
 // console.log(isOdd(1))
 
 function someRecursive(array, callback) {
+  if (array.length === 0) {
+    return false;
+  }
   if (callback(array[0])) {
     return true;
   }
-  if (array.length === 0) {
-    return;
-  }
-  someRecursive(array.slice(1), callback);
-  return false;
+
+  return someRecursive(array.slice(1), callback);
 }
 
 const isOdd = (val) => val % 2 !== 0;
@@ -21,3 +21,11 @@ const isOdd = (val) => val % 2 !== 0;
 // someRecursive([4,6,8,9], isOdd) // true
 // console.log(someRecursive([4, 6, 8], isOdd)); // false
 console.log(someRecursive([4, 6, 8], (val) => val > 10)); // false
+
+//alt solution
+
+function someRecursive(array, callback) {
+  if (array.length === 0) return false;
+  if (callback(array[0])) return true;
+  return someRecursive(array.slice(1),callback);
+}
