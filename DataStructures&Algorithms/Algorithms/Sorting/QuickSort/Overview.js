@@ -1,89 +1,75 @@
 /**
- * Merge Sort
- * 
- * Merge sort is a divide and conquer algorithm that divides the input array into smaller subarrays, sorts them, and then merges them back together.
- * It recursively divides the array in half until each subarray contains only one element, then merges the subarrays in a sorted order.
- * 
- * Time Complexity: 
+ * Quick Sort
+ *
+ * Quick sort is a divide-and-conquer sorting algorithm that works by selecting a 'pivot' element from the array
+ * and partitioning the other elements into two sub-arrays according to whether they are less than or greater than the pivot.
+ * The sub-arrays are then sorted recursively.
+ *
+ * Time Complexity:
  *   - Best Case: O(n log n)
  *   - Average Case: O(n log n)
- *   - Worst Case: O(n log n)
- * Space Complexity: O(n) - Requires additional space for temporary arrays during merging
- * 
+ *   - Worst Case: O(n^2) (if the pivot selection is poor)
+ * Space Complexity: O(log n) - Recursive stack space
+ *
  * @param {Array} arr - The array to be sorted
  * @returns {Array} - The sorted array
  */
-function mergeSort(arr) {
-    // Base case: If the array has 0 or 1 element, it is already sorted
-    if (arr.length <= 1) {
-      return arr;
+function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+
+  const pivot = arr[Math.floor(arr.length / 2)];
+  const left = [];
+  const right = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] < pivot) {
+      left.push(arr[i]);
+    } else if (arr[i] > pivot) {
+      right.push(arr[i]);
     }
-    
-    // Divide the array into two halves
-    const middle = Math.floor(arr.length / 2);
-    const leftHalf = arr.slice(0, middle);
-    const rightHalf = arr.slice(middle);
-    
-    // Recursively sort each half
-    const sortedLeft = mergeSort(leftHalf);
-    const sortedRight = mergeSort(rightHalf);
-    
-    // Merge the sorted halves
-    return merge(sortedLeft, sortedRight);
   }
-  
-  /**
-   * Merge function to merge two sorted arrays into one sorted array
-   * 
-   * @param {Array} arr1 - The first sorted array
-   * @param {Array} arr2 - The second sorted array
-   * @returns {Array} - The merged and sorted array
-   */
-  function merge(arr1, arr2) {
-    let merged = [];
-    let i = 0; // Pointer for arr1
-    let j = 0; // Pointer for arr2
-    
-    // Compare elements from both arrays and push the smaller one into the merged array
-    while (i < arr1.length && j < arr2.length) {
-      if (arr1[i] < arr2[j]) {
-        merged.push(arr1[i]);
-        i++;
-      } else {
-        merged.push(arr2[j]);
-        j++;
-      }
-    }
-    
-    // If there are remaining elements in arr1 or arr2, push them into the merged array
-    while (i < arr1.length) {
-      merged.push(arr1[i]);
-      i++;
-    }
-    
-    while (j < arr2.length) {
-      merged.push(arr2[j]);
-      j++;
-    }
-    
-    return merged;
+
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}
+
+//alt implementation
+//creat pivot function
+function pivot(array, start = 0, end = array.length + 1) {
+  function swap(array, i, j) {
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
   }
-  
-  // Example Usage:
-  
-  // Example 1: Sorting numbers
-  const numbers = [5, 3, 8, 4, 2];
-  console.log(mergeSort(numbers)); // Output: [2, 3, 4, 5, 8]
-  
-  // Example 2: Sorting strings
-  const strings = ['banana', 'apple', 'cherry', 'date'];
-  console.log(mergeSort(strings)); // Output: ['apple', 'banana', 'cherry', 'date']
-  
-  // Example 3: Sorting objects by a specific property
-  const objects = [
-    { name: 'John', age: 25 },
-    { name: 'Alice', age: 30 },
-    { name: 'Bob', age: 20 }
-  ];
-  console.log(mergeSort(objects, (a, b) => a.age - b.age)); // Output: [{ name: 'Bob', age: 20 }, { name: 'John', age: 25 }, { name: 'Alice', age: 30 }]
-  
+  var pivot = arr[start];
+  var swapIdx = start;
+  for (var i = start + 1; i < array.length; i++) {
+    if (pivot > array[i]) {
+      swapIdx++;
+      swap(array, swapIdx, i);
+    }
+  }
+  swap(array, start, swapIdx);
+  return swapIdx;
+}
+
+//quick sort using pivot helper
+function quickSort(array, left = 0, right = array.length - 1) {
+  if (left < right) {
+    let pivotIndex = pivot(array, left, right);
+    //left
+    quickSort(array, left, pivotIndex - 1);
+    //right
+    quickSort(array, pivotIndex + 1, right);
+  }
+
+  return array;
+}
+// Example Usage:
+
+// Example 1: Sorting numbers
+const numbers = [5, 3, 7, 2, 8, 4, 1, 6];
+console.log(quickSort(numbers)); // Output: [1, 2, 3, 4, 5, 6, 7, 8]
+
+// Example 2: Sorting strings
+const strings = ["banana", "apple", "cherry", "date"];
+console.log(quickSort(strings)); // Output: ['apple', 'banana', 'cherry', 'date']
