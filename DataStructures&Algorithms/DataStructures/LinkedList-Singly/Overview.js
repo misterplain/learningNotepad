@@ -75,6 +75,132 @@ class SinglyLinkedList {
     return current;
   }
 
+  //shift - remove a new node from the beginning of the linked list
+  // if no nodes, return undefined. store the current head property in a variable. set the head property to be the current heads next property. decrement the length by 1. return the value of the node removed.
+  shift() {
+    if (!this.head) return undefined;
+    var currentHead = this.head;
+    this.head = currentHead.next;
+    this.length--;
+    if (this.length === 0) {
+      this.tail = null;
+    }
+    return currentHead;
+  }
+
+  //unshift - adding a new node to the beginning of the linked list
+  //the function should accept a value. create a new node using the value passed to the function
+  // if there is no head property on the list, set the head and tailt o be the newly created node
+  //otherwise set the newly created noes next property to be the current head property on the list. set the head property on the list to be that newly created node. increment the length of the list by 1. return the link list.
+  unshift(val) {
+    var newNode = new Node(val);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = this.head;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+
+    this.length++;
+    return this;
+  }
+
+  //get - retrieve a node by it's position in a linked list. loop / manually count until we've hit that value
+  //will accept an index. if the index is less than 0 or greater than the or equal to the length of the list, return null
+  //loop through the list until you reach the index and return the node at that specific index
+  get(index) {
+    if (index < 0 || index >= this.length) return null;
+    var counter = 0;
+    var current = this.head;
+    while (counter !== index) {
+      current = current.next;
+      counter++;
+    }
+
+    return current;
+  }
+
+  //set - changing the value of a node based on its position in the linked list. accepts value and an index
+  //use your get function to find the specific node. if node is not found return false. if it is, update it's value and return true
+  set(index, value) {
+    var foundNode = this.get(index);
+    if (foundNode) {
+      foundNode.val = value;
+      return true;
+    }
+    return false;
+  }
+
+  //insert - adding a node to the linked list at a specific position
+  //take in index and value. if the index is less than 0 or greater than the length, reutrn false
+  //if the index is the same as the length, push a new node to the end of the list
+  //if the index is 0, unshift a new node to start of the list
+  //otherwise, using the get method, access the node at index - 1 to get the BEFORE node. set the next property on that node to the NEW node. set the next property on the new node to the previous next
+  //increment the length, return true
+  insert(index, value) {
+    if (index < 0 || index > this.length) return false;
+    if (index === this.length) return this.push(value);
+    if (index === 0) return this.unshift(value);
+    var newNode = new Node(val);
+    var previous = this.get(index - 1);
+    var temp = previous.next;
+    previous.next = newNode;
+    newNode.next = temp;
+    this.length++;
+    return true;
+  }
+
+  //remove - removing a node from the linked list at a specific position
+  //if the index is the same as lenth-1, use pop. if it's equal to 0, shift
+  //otherwise, use get to find index-1, set the next property on that node to be the next of the next ndoe
+  //decrement and return the value of the removed node
+  remove(index) {
+    if (index < 0 || index > this.length) return false;
+    if (index === 0) return this.shift();
+    if (index === this.length - 1) return this.pop();
+    var previousNode = this.get(index - 1);
+    var removed = previousNode.next;
+    previousNode.next = removed.next;
+    this.length--;
+    return removed;
+  }
+
+  //reverse - reversing the linked list in place
+  //swap the head and the tail
+  //create a variable called next, create a variable called previous
+  //create a variable called node and initialize it to the head property
+  //loop through the list
+  //set next to be the next property on whatever node is
+  //same thing for previous, set the node variable to be the value of the next variable
+
+  reverse() {
+    var node = this.head;
+    this.head = this.tail;
+    this.tail = node;
+
+    var next;
+    var previous = null;
+    for (var i = 0; i < this.length; i++) {
+      next = node.next;
+      node.next = previous;
+      previous = node;
+      node = next;
+    }
+
+    return this;
+  }
+
+  print() {
+    var arr = [];
+    var current = this.head;
+    while (current) {
+      arr.push(current.val);
+      current = current.next;
+    }
+    console.log(arr);
+  }
+
   // Method to insert a new node at the beginning of the list
   insertFirst(data) {
     const newNode = new Node(data); // Create a new node with the given data
