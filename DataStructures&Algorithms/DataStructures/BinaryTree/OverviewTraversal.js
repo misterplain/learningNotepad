@@ -124,6 +124,129 @@ class BinarySearchTree {
     }
   }
 
+  //when to use BFS vs DFS
+  //for BFS will the queue require a huge memory if the tree is quite wide?, smaller queue for thinner trees
+  //DFS has fewer nodes to keep track of 
+  //dfs variants, when to use one over the other
+  //pre order - could be useful if you're trying to clone or duplicate a tree, given in an order where you can reconstruct the tree(starts with root)
+  //post order - 
+  //in order, we will receive back an ORDERED list
+
+  //breadth first and depth first
+  //BFS - visit every sibling child before we look at the children, working horizontally
+  //iterative steps
+  //create a queue (this can be an array and a variable to store the values of nodes visited
+  //place the root node in the queue
+  //look as long as there is anything in the queue
+  //dequeue a node from the queue and push the value of the node into the variable that stores the nodes
+  //if there is a left property of the node dequeueus, add it to the queue
+  //if there is a right property on the node deuqueueued, add it to the queue
+  //return the variable that stores the values
+  //basically we're using the queue array to store items that WILL be visited
+  BFS() {
+    var data = [];
+    var queue = [];
+    var node = this.root;
+    queue.push(this.root);
+    while (queue.length) {
+      node = queue.shift();
+      data.push(node);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+    return data;
+  }
+
+  //Depth first search (pursue all n odes vertically down to the end of the tree before visiting sibling nodes)
+  //pre order - visit the node first (add it to the list). visit next node down and ALSo add it to list of data
+  //steps recursive
+  //create a variable to store the values of the nodes visited
+  //store the root of the BST in a variable called current
+  //write a helper function which accepts a node
+  //push the value of the node to the variable that stores teh values
+  //if the node has a left property, call the helper function witht the left property on the node
+  //if the node has a right property, call the helper runfction with the right property of the node
+  //invoke the helper function with the current variable
+  //return the array of values
+  DFSPreOrder() {
+    var data = [];
+    var current = this.root;
+    function traverse(node) {
+      data.push(node);
+      if (node.left) traverse(node.left);
+      if (node.right) traverse(node.right);
+    }
+    traverse(current);
+    return data;
+  }
+
+  //post order - visit a node AFTER we look at the left and the right, explore the entire branch first and THEN we visit the node. Same pseudocode as before except the location of the data.push(node)
+  DFSPostOrder() {
+    var data = [];
+    var current = this.root;
+    function traverse(node) {
+      if (node.left) traverse(node.left);
+      if (node.right) traverse(node.right);
+      data.push(node);
+    }
+    traverse(current);
+    return data;
+  }
+
+  //DFS - in order traversal. traverse the entire left side, THEN visit the node, THEN visit the entire left side. so traverse left, visit node, traverse right
+  DFSInOrder() {
+    var data = [];
+    var current = this.root;
+    function traverse(node) {
+      if (node.left) traverse(node.left);
+      data.push(node);
+      if (node.right) traverse(node.right);
+    }
+    traverse(current);
+    return data;
+  }
+
+  // In-order Traversal: Visit nodes in ascending order
+  inOrderTraversal(callback) {
+    this.inOrderTraversalNode(this.root, callback);
+  }
+
+  // Helper method to recursively perform in-order traversal
+  inOrderTraversalNode(node, callback) {
+    if (node !== null) {
+      this.inOrderTraversalNode(node.left, callback);
+      callback(node.value);
+      this.inOrderTraversalNode(node.right, callback);
+    }
+  }
+
+  // Pre-order Traversal: Visit root node first
+  preOrderTraversal(callback) {
+    this.preOrderTraversalNode(this.root, callback);
+  }
+
+  // Helper method to recursively perform pre-order traversal
+  preOrderTraversalNode(node, callback) {
+    if (node !== null) {
+      callback(node.value);
+      this.preOrderTraversalNode(node.left, callback);
+      this.preOrderTraversalNode(node.right, callback);
+    }
+  }
+
+  // Post-order Traversal: Visit root node last
+  postOrderTraversal(callback) {
+    this.postOrderTraversalNode(this.root, callback);
+  }
+
+  // Helper method to recursively perform post-order traversal
+  postOrderTraversalNode(node, callback) {
+    if (node !== null) {
+      this.postOrderTraversalNode(node.left, callback);
+      this.postOrderTraversalNode(node.right, callback);
+      callback(node.value);
+    }
+  }
 }
 
 // Example usage:
