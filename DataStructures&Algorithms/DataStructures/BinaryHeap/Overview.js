@@ -19,22 +19,47 @@ Overall, Binary Heaps provide efficient insertion and deletion of elements while
 //max binary heap notes
 //each parent has at most two child nodes. the value of each parent node is always greater than its child nodes
 //in a maxBinaryHeap the parent is greater than the children, but there are no guarantees between sibling nodes
-//a binary heap is as compact as possible. All the children of each node are as full as they can be and left children are filled out first. 
+//a binary heap is as compact as possible. All the children of each node are as full as they can be and left children are filled out first.
 //minBinaryHeap will have opposite rule, smallest is root node, both children have to be largest etc
-//binaryHeaps are used to implement priority queues, which are very commonly used data structures. they are also used quite a bit, with graph traversal algorithms. 
+//binaryHeaps are used to implement priority queues, which are very commonly used data structures. they are also used quite a bit, with graph traversal algorithms.
 //to store within an array, for any index of n the left child is stored at 2n+1 and the right child is stored at 2n+2
-//from child to parent its (n-1)/2 - floored to get rid of decimal point 
+//from child to parent its (n-1)/2 - floored to get rid of decimal point
 
 //pseudocode for bubble / insert
 //push the value into the values property of the heap
 //bubble the value up to its correct spot
 //
 class MaxBinaryHeap2 {
-    constructor() {
-      this.values = [];
-    }
-}
+  constructor() {
+    this.values = [];
+  }
+  //insert pseudocode
+  //push the value into the values property on the heap
+  /*Bubble Up
+    Create a variable called index which is the length of the values property - 1
+    create a variable called parentIndex which is the floor of (index-1)/2
+    Keep looping as long as the values element at the parentIndex is less than the values element at the child index
+    //swap the val of the values element at the parentIndex with the value of the elemnt property at the child index
+    set the index to be the parentIndex and start over
 
+    */
+  insert(element) {
+    this.values.push(element);
+    this.bubbleUp();
+  }
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    const element = this.values[idx];
+    while (true) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.values[parentIdx];
+      if (element <= parent) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parent;
+      idx = parentIdx;
+    }
+  }
+}
 
 //provided by chatGPT
 class MaxBinaryHeap2 {
@@ -60,6 +85,19 @@ class MaxBinaryHeap2 {
     }
   }
 
+  //remove the root, replace with the most recently added, adjust and sink down
+  /**PSEUDOCODE REMOVING AND SINK DOWN
+   * Swap the first value in the values roperty with the last one
+   * Pop from the values prorperty, so you can return the value at the end
+   * have the new root "sink down" to the correct spot
+   * - your parent index starts at 0
+   * find the index of the left child which is 2 * index + 1 (make sure its not out of the bounds)
+   * find the index of the right child 2 * index + 2 (make sure it's not out of bounds
+   * if the left or right child is greater than the element, swap. if both the left and right children are larger, swap with the largest child)
+   * the child index you swapped now becomes the new parent index
+   * keep looping and swapping unti lneither child is larger than the element
+   * return the old root
+   */
   extractMax() {
     const max = this.values[0];
     const end = this.values.pop();
@@ -103,6 +141,95 @@ class MaxBinaryHeap2 {
   }
 }
 
+class Node {
+  constructor(val, priority) {
+    this.val = val;
+    this.priority = priority;
+  }
+}
+
+//Priority Queue via minHeap, taking into account priority of node
+class PriorityQueue {
+  constructor() {
+    this.values = [];
+  }
+
+  enqueue(val, priority) {
+    let newNode = new Node(val, priority);
+    this.values.push(newNode);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    let index = this.values.length - 1;
+    const element = this.values[index];
+    while (index > 0) {
+      let parentIndex = Math.floor((index - 1) / 2);
+      let parent = this.values[parentIndex];
+      if (element.priority >= parent.priority) break;
+      this.values[parentIndex] = element;
+      this.values[index] = parent;
+      index = parentIndex;
+    }
+  }
+
+  //remove the root, replace with the most recently added, adjust and sink down
+  /**PSEUDOCODE REMOVING AND SINK DOWN
+   * Swap the first value in the values roperty with the last one
+   * Pop from the values prorperty, so you can return the value at the end
+   * have the new root "sink down" to the correct spot
+   * - your parent index starts at 0
+   * find the index of the left child which is 2 * index + 1 (make sure its not out of the bounds)
+   * find the index of the right child 2 * index + 2 (make sure it's not out of bounds
+   * if the left or right child is greater than the element, swap. if both the left and right children are larger, swap with the largest child)
+   * the child index you swapped now becomes the new parent index
+   * keep looping and swapping unti lneither child is larger than the element
+   * return the old root
+   */
+  dequeue() {
+    const min = this.values[0];
+    const end = this.values.pop();
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.sinkDown();
+    }
+    return min;
+  }
+
+  sinkDown() {
+    let index = 0;
+    const length = this.values.length;
+    const element = this.values[0];
+    while (true) {
+      let leftChildIndex = 2 * index + 1;
+      let rightChildIndex = 2 * index + 2;
+      let leftChild, rightChild;
+      let swap = null;
+
+      if (leftChildIndex < length) {
+        leftChild = this.values[leftChildIndex];
+        if (leftChild.priority < element.priotiry) {
+          swap = leftChildIndex;
+        }
+      }
+      if (rightChildIndex < length) {
+        rightChild = this.values[rightChildIndex];
+        if (
+          (swap === null && rightChild.priority < element.priority) ||
+          (swap !== null && rightChild.priority < leftChild.priority)
+        ) {
+          swap = rightChildIndex;
+        }
+      }
+      if (swap === null) break;
+      this.values[index] = this.values[swap];
+      this.values[swap] = element;
+      index = swap;
+    }
+  }
+}
+
+//from chatGPT
 class PriorityQueue {
   constructor() {
     this.values = [];
